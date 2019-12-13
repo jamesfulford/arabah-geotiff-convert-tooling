@@ -9,7 +9,9 @@ mkdir lists
 for i in {2000..2019}; do
   file_list="./lists/${i}_hdf_file_list"
   rm -f "$file_list"
-  for hdf_file in ./$directory/*$i*$i*.hdf; do
+  for hdf_file in ./$directory/*$i*.hdf; do
+    [ -e "$hdf_file" ] || continue
+    echo "$hdf_file"
     echo 'HDF4_EOS:EOS_GRID:"'${hdf_file}'":MODIS_Grid_16DAY_1km_VI:"1 km 16 days NDVI"' >> "$file_list.ndvi.txt"
     # Other option:
     # echo 'HDF4_EOS:EOS_GRID:"'${hdf_file}'":MODIS_Grid_16DAY_1km_VI:"1 km 16 days EVI"' >> "$file_list.evi.txt"
@@ -25,3 +27,5 @@ docker run -v"$PWD:/working-directory" -w /working-directory osgeo/gdal:latest "
 rm -rf "tiffs/$directory"
 mkdir -p "tiffs/$directory"
 mv ./lists/*.tiff "tiffs/$directory"
+
+python rename.py
