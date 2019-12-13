@@ -2,7 +2,9 @@
 # bash download-modern.sh && bash process.sh modern
 
 directory="modern"
-mkdir "$directory"
+
+rm -rf "$directory"
+mkdir -p "$directory"
 
 GREP_OPTIONS=''
 
@@ -31,14 +33,14 @@ exit_with_error() {
     echo
     echo $1
     echo
-    echo "https://e4ftl01.cr.usgs.gov//DP106/MOLT/MOD13Q1.006/2019.02.18/MOD13Q1.A2019049.h21v06.006.2019073153053.hdf"
+    echo "https://e4ftl01.cr.usgs.gov//DP106/MOLT/MOD13Q1.006/2018.01.17/MOD13Q1.A2018017.h21v06.006.2018033223406.hdf"
     echo
     exit 1
 }
 
 prompt_credentials
   detect_app_approval() {
-    approved=`curl -s -b "$cookiejar" -c "$cookiejar" -L --max-redirs 2 --netrc-file "$netrc" https://e4ftl01.cr.usgs.gov//DP106/MOLT/MOD13Q1.006/2019.02.18/MOD13Q1.A2019049.h21v06.006.2019073153053.hdf -w %{http_code} | tail  -1`
+    approved=`curl -s -b "$cookiejar" -c "$cookiejar" -L --max-redirs 2 --netrc-file "$netrc" https://e4ftl01.cr.usgs.gov//DP106/MOLT/MOD13Q1.006/2018.01.17/MOD13Q1.A2018017.h21v06.006.2018033223406.hdf -w %{http_code} | tail  -1`
     if [ "$approved" -ne "302" ]; then
         # User didn't approve the app. Direct users to approve the app in URS
         exit_with_error "Please ensure that you have authorized the remote application by visiting the link below "
@@ -47,7 +49,7 @@ prompt_credentials
 
 setup_auth_curl() {
     # Firstly, check if it require URS authentication
-    status=$(curl -s -z "$(date)" -w %{http_code} https://e4ftl01.cr.usgs.gov//DP106/MOLT/MOD13Q1.006/2019.02.18/MOD13Q1.A2019049.h21v06.006.2019073153053.hdf | tail -1)
+    status=$(curl -s -z "$(date)" -w %{http_code} https://e4ftl01.cr.usgs.gov//DP106/MOLT/MOD13Q1.006/2018.01.17/MOD13Q1.A2018017.h21v06.006.2018033223406.hdf | tail -1)
     if [[ "$status" -ne "200" && "$status" -ne "304" ]]; then
         # URS authentication is required. Now further check if the application/remote service is approved.
         detect_app_approval
